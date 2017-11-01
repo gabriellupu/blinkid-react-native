@@ -28,7 +28,7 @@ cd <path_to_your_project>
 npm i --save blinkid-react-native
 ```
 
-Link module with your project: 
+Link module with your project:
 
 ```shell
 react-native link blinkid-react-native
@@ -42,9 +42,9 @@ allprojects {
     // don't forget to add maven and jcenter
     mavenLocal()
     jcenter()
-    
+
     // ... other repositories your project needs
-    
+
     maven { url "http://maven.microblink.com" }
   }
 }
@@ -52,7 +52,7 @@ allprojects {
 
 ## Demo
 
-This repository contains **initReactNativeDemoApp.sh** script that will create React Native project and download all of its dependencies. Put that script in your wanted folder and run this command: 
+This repository contains **initReactNativeDemoApp.sh** script that will create React Native project and download all of its dependencies. Put that script in your wanted folder and run this command:
 ```shell
 ./initReactNativeDemoApp.sh
 ```
@@ -112,6 +112,7 @@ To use the module you call it in your index.android.js or index.ios.js file like
 * RECOGNIZER_EUDL - scans the front of European driver license
 * RECOGNIZER_MYKAD - scans the front of Malaysian ID
 * RECOGNIZER_DOCUMENT_FACE - scans documents with face image and returns document images
+* RECOGNIZER_RO - scans Romanian ID document face
 */
 
 /**
@@ -155,14 +156,14 @@ const licenseKey = Platform.select({
 var renderIf = function(condition, content) {
   if (condition) {
       return content;
-  } 
+  }
   return null;
 }
 
 export default class BlinkIDReactNative extends Component {
   constructor(props) {
     super(props);
-    this.state = {showImage: false, 
+    this.state = {showImage: false,
                   resultImage: '',
                   results: '',
                   licenseKeyErrorMessage: ''};
@@ -187,6 +188,8 @@ export default class BlinkIDReactNative extends Component {
           BlinkID.RECOGNIZER_EUDL,
           // scans MyKad (Malaysian ID)
           BlinkID.RECOGNIZER_MYKAD
+          // scans Romanian IDs
+          BlinkID.RECOGNIZER_RO,
         ]
       })
       if (scanningResult) {
@@ -224,7 +227,7 @@ export default class BlinkIDReactNative extends Component {
                                       "Customer ID: " + fields[USDLKeys.CustomerIdNumber] + fieldDelim;
 
           } else if (recognizerResult.resultType == "MRTD result") {
-                      
+
               var fields = recognizerResult.fields
               // MRTDKeys are keys from keys/mrtd_keys.js
               resultsFormattedText += /** Personal information */
@@ -241,7 +244,7 @@ export default class BlinkIDReactNative extends Component {
                                       "Opt2: " + fields[MRTDKeys.Opt2] + fieldDelim;
 
           } else if (recognizerResult.resultType == "EUDL result") {
-                          
+
               var fields = recognizerResult.fields
               // EUDLKeys are keys from keys/eudl_keys.js
               resultsFormattedText += /** Personal information */
@@ -254,7 +257,7 @@ export default class BlinkIDReactNative extends Component {
                                       "Birth Data: " + fields[EUDLKeys.BirthData] + fieldDelim;
 
           } else if (recognizerResult.resultType == "MyKad result") {
-    
+
               var fields = recognizerResult.fields
               // MYKADKeys are keys from keys/mykad_keys.js
               resultsFormattedText += /** Personal information */
@@ -281,7 +284,7 @@ export default class BlinkIDReactNative extends Component {
     } catch(error) {
         this.setState({ showImage: false, resultImage: '', results: error.message});
     }
-    
+
   }
 
   render() {
@@ -300,7 +303,7 @@ export default class BlinkIDReactNative extends Component {
         </View>
         <ScrollView
           automaticallyAdjustContentInsets={false}
-          scrollEventThrottle={200}y> 
+          scrollEventThrottle={200}y>
           {renderIf(this.state.showImage,
               <View style={styles.imageContainer}>
               <Image
@@ -359,7 +362,7 @@ AppRegistry.registerComponent('BlinkIDReactNative', () => BlinkIDReactNative);
     + **RECOGNIZER_EUDL** - scans the front of European driver's license
     + **RECOGNIZER\_MYKAD** - scans the front of Malaysian ID
     + **RECOGNIZER\_DOCUMENT\_FACE** - scans documents with face image and returns document images
-	
+
 + Scan method returns scan fields in JSON format and images (image is returned as Base64 encoded JPEG)
 	+ **scanningResult.resultList** : array of scanning results in JSON format (each activated recognizer can produce its own result)
 	+ **scanningResult.resultImageCropped** : cropped document image
